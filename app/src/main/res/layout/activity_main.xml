@@ -4,13 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-<!--    <androidx.fragment.app.FragmentContainerView-->
-<!--        android:name="com.example.reelswithviewpageronly.ContentFragment"-->
-<!--        android:id="@+id/fragment_placeholder"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
+    tools:context=".ui.MainActivity">
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"

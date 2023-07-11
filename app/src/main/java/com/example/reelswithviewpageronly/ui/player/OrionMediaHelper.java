@@ -1,4 +1,4 @@
-package com.example.reelswithviewpageronly;
+package com.example.reelswithviewpageronly.ui.player;
 
 import android.content.Context;
 

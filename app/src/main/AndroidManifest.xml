@@ -5,7 +5,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Android 12 and above permission for HIGH_SAMPLING_RATE_SENSORS -->
     <uses-permission
@@ -13,16 +13,16 @@
         tools:ignore="HighSamplingRate" /> <!-- Permission to gather Google advertising ID targeting Android 12 and above (API level 31) -->
 
 
-
     <!-- For Google IMA SDK (serving ads). -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <!-- For playing content from external storage locations. -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!-- For copying test content to external storage locations.
          Ignored since Android 11/API 30 (has no effect at all anymore) -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"
         tools:ignore="ScopedStorage" />
 
@@ -40,7 +40,7 @@
         android:theme="@style/Theme.ReelsWithViewPagerOnly"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

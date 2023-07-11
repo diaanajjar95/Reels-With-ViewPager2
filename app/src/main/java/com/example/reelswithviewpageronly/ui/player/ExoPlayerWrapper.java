@@ -27,7 +27,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.example.reelswithviewpageronly;
+package com.example.reelswithviewpageronly.ui.player;
 
 import android.content.Context;
 import android.net.Uri;

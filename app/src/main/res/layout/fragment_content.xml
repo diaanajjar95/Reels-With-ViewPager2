@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ContentFragment">
+    tools:context=".ui.content.ContentFragment">
 
     <fi.finwe.orion360.sdk.pro.view.OrionViewContainer
         android:id="@+id/orion_view_container"

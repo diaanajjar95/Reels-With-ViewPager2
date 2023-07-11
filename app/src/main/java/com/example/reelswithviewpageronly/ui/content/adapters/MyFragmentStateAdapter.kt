@@ -1,8 +1,10 @@
-package com.example.reelswithviewpageronly
+package com.example.reelswithviewpageronly.ui.content.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.reelswithviewpageronly.ui.models.ReelItem
+import com.example.reelswithviewpageronly.ui.content.ContentFragment
 
 class MyFragmentStateAdapter(
     fragmentActivity: FragmentActivity,

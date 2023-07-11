@@ -1,4 +1,4 @@
-package com.example.reelswithviewpageronly
+package com.example.reelswithviewpageronly.ui.content
 
 import android.app.Activity
 import android.content.Context
@@ -11,8 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.reelswithviewpageronly.ui.player.ExoPlayerWrapper
+import com.example.reelswithviewpageronly.ui.player.OrionMediaHelper
+import com.example.reelswithviewpageronly.ui.player.OrionViewContainerIma
+import com.example.reelswithviewpageronly.R
+import com.example.reelswithviewpageronly.ui.player.TouchControllerWidget
 import com.google.ads.interactivemedia.v3.api.AdEvent
-import com.google.ads.interactivemedia.v3.api.AdEvent.AdEventType
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
 import com.google.android.exoplayer2.util.Util
@@ -36,12 +40,12 @@ private const val ARG_VIDEO = "ARG_VIDEO"
 private const val ARG_TITLE = "ARG_TITLE"
 
 open class ContentFragment : Fragment(), AdEvent.AdEventListener {
+
     private var video: String? = null
     private var title: String? = null
 
     private var mContext: Context? = null
 
-    /** Root view.  */
     private var mRootView: View? = null
 
     /** Google ExoPlayer.  */
@@ -79,7 +83,7 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
     private var mScene: OrionScene? = null
 
     /**
-     * OrionPanorama is an OrionSceneItem that specializes in rendering equi rectangular textures.
+     * OrionPanorama is an OrionSceneItem that specializes in rendering equirectangular textures.
      *
      * In most cases, the texture is wrapped around the inner surface of a polygon (sphere,
      * diamond etc.) and the camera placed at the center of the polygon, which presents a
@@ -126,7 +130,6 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
      */
     private var mTouchController: TouchControllerWidget? = null
 
-
     private var mVideoPlayer: ExoPlayerWrapper? = null
 
     /** Google IMA ad loader.  */
@@ -134,7 +137,6 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
 
     /** The view group where Orion and ad related views will be added to as layers.  */
     private var mViewContainerIma: OrionViewContainerIma? = null
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -184,16 +186,12 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
         Log.d(TAG, "onViewCreated: video : $video")
         Log.d(TAG, "onViewCreated: title : $title")
 
+        // rendering the title of the reel (just to show that the items are changing while the user is scrolling)
         val titleTextView: TextView = view.findViewById(R.id.title)
         titleTextView.text = title
 
         // Find view group for Orion and ad player views.
         mViewContainerIma = view.findViewById(R.id.orion_view_container_ima)
-
-
-        // Get Orion360 view container from the inflated XML layout.
-        // This is where both ads and media content will appear.
-        /**mViewContainer = mViewContainerIma.orionViewContainer*/
 
         // Get Orion360 view container from the inflated XML layout.
         // This is where both ads and media content will appear.
@@ -246,10 +244,11 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
         // Create a new video player that uses Google ExoPlayer as an audio/video engine.
 
         // Create a new video player that uses Google ExoPlayer as an audio/video engine.
-        mVideoPlayer = ExoPlayerWrapper(context, mOrionContext)
-
-        // Configurations to enable playing ads.
-        //mVideoPlayer.setAdTag(getString(R.string.ad_tag_url));      // IMPORTANT
+        mVideoPlayer =
+            ExoPlayerWrapper(
+                context,
+                mOrionContext
+            )
 
         // Configurations to enable playing ads.
         //mVideoPlayer.setAdTag(getString(R.string.ad_tag_url));      // IMPORTANT
@@ -258,14 +257,13 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
         mVideoPlayer?.setAdViewProvider(mViewContainerIma) // IMPORTANT
 
         // Create a new video (or image) texture from a video (or image) source URI.
-        //mPanoramaTexture = new OrionVideoTexture(mOrionContext,
-        //mVideoPlayer, "https://dxmckoh3avtig.cloudfront.net/RiyadhHQT/DianaHaddad/Diana1Min/Diana1min.m3u8");
-        mPanoramaTexture = OrionMediaHelper().initializeOrionTexture(
-            context,
-            mOrionContext,
-            mVideoPlayer,
-            video
-        )
+        mPanoramaTexture = OrionMediaHelper()
+            .initializeOrionTexture(
+                context,
+                mOrionContext,
+                mVideoPlayer,
+                video
+            )
 
         // Get handle to Orion's ExoPlayer as soon as it has been created.
         // We will use this same ExoPlayer instance for playing ads.
@@ -273,8 +271,8 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
             object : OrionVideoTexture.ListenerBase() {
                 override fun onVideoPlayerCreated(texture: OrionVideoTexture) {
                     Logger.logF()
-                    if (null != mVideoPlayer) {
-                        mExoPlayer = mVideoPlayer?.exoPlayer
+                    mVideoPlayer?.let { exoPlayerWrapper ->
+                        mExoPlayer = exoPlayerWrapper.exoPlayer
                     }
                 }
             })
@@ -305,7 +303,11 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
 
         // Create a new touch controller widget (convenience class), and let it control
         // our camera.
-        mTouchController = TouchControllerWidget(mOrionContext, mCamera)
+        mTouchController =
+            TouchControllerWidget(
+                mOrionContext,
+                mCamera
+            )
 
         // Bind the touch controller widget to the scene. This will make it functional
         // in the scene.
@@ -399,14 +401,14 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
             "onAdEvent(): $adEvent"
         )
         when (adEvent.type) {
-            AdEventType.CONTENT_PAUSE_REQUESTED ->  // Switch to 2D projection for playing the ad.
+            AdEvent.AdEventType.CONTENT_PAUSE_REQUESTED ->  // Switch to 2D projection for playing the ad.
                 if (null != mPanorama) {
                     mPanorama?.panoramaType = OrionPanorama.PanoramaType.PANEL_SOURCE
                     mPanorama?.setRenderingMode(OrionSceneItem.RenderingMode.CAMERA_DISABLED)
                     handleOrientation()
                 }
 
-            AdEventType.CONTENT_RESUME_REQUESTED -> // Switch back to 360° rectilinear projection for playing the media content.
+            AdEvent.AdEventType.CONTENT_RESUME_REQUESTED -> // Switch back to 360° rectilinear projection for playing the media content.
                 if (null != mPanorama) {
                     mPanorama?.panoramaType = OrionPanorama.PanoramaType.SPHERE
                     mPanorama?.setRenderingMode(OrionSceneItem.RenderingMode.PERSPECTIVE)
