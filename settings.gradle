@@ -1,0 +1,26 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+
+        maven {
+            name = "FinweOrion360SDKPublicMaven"
+            url = uri("https://maven.pkg.github.com/finweltd/orion360-sdk-public-maven")
+            credentials {
+                username = "orion360sdk"
+                password = "\u0067hp_6zjSXtyiCnFn3r6XdlVXpeWmGIMovz2fHHqe"
+            }
+        }
+
+    }
+}
+rootProject.name = "Reels With ViewPager Only"
+include ':app'

@@ -1,0 +1,23 @@
+# This file contains the list of applications
+# for which this Orion360 license is valid
+# Please do not modify this file in any way
+
+packagename=com.example.reelswithviewpageronly
+logo=finwe
+platform = android
+version = 3.0
+enableFeatureExplicit = video360 \
+image360 \
+sprite \
+barrel_distortion
+expirationDate =
+
+issueDate = 2023-07-07 12:36:31 +0000
+
+=========================== BEGIN-SIGNATURE-V3.37 ===========================
+RKW7MNfU/0lEK9WkRvINA/sehzwcnDgbDU+YPEGybfy2MT77798ht3rQQy8tvvtLteW6FyIwenK8
+c9TG3EZGpP2+C6aeGxPI92cAxLvpsjV/sbPl1o2ClIBYF/vQyOGMbG/Wkh37nfIFoDaLE5106D7h
+VwKK4Cv1luQ8FT3tsMSMsC4IVRWYdX24QIVRW35M8ny4TWvRiE62IsQy4tpvIGt9DFSn9uTDJZAW
+jmreP8Wav+clvgmASLZmvBffxMsfFL07eSFQJ/aBeQHGwcJEQ8T73y8dr7FQfH9XCWHogaKgmex9
+EdlaXRtQoWhhaDPZa+S78nz586+9tyATn+YnQg==
+============================= END-SIGNATURE-V3.37 ===========================
