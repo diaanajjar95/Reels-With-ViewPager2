@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE RelativeLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <fi.finwe.orion360.sdk.pro.examples.ads.OrionViewContainerIma
+        android:id="@+id/orion_view_container_ima"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:backgroundTint="#ffffff" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
