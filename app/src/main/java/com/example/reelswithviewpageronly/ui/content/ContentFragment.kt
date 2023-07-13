@@ -3,6 +3,7 @@ package com.example.reelswithviewpageronly.ui.content
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -11,14 +12,25 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.reelswithviewpageronly.R
 import com.example.reelswithviewpageronly.ui.player.ExoPlayerWrapper
+import com.example.reelswithviewpageronly.ui.player.HlsMediaSourceHelper.setErrorHandlingPolicy
 import com.example.reelswithviewpageronly.ui.player.OrionMediaHelper
 import com.example.reelswithviewpageronly.ui.player.OrionViewContainerIma
-import com.example.reelswithviewpageronly.R
 import com.example.reelswithviewpageronly.ui.player.TouchControllerWidget
 import com.google.ads.interactivemedia.v3.api.AdEvent
+import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.LoadControl
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ext.ima.ImaAdsLoader
+import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.upstream.Allocator
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultAllocator
+import com.google.android.exoplayer2.upstream.DefaultDataSource
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource
 import com.google.android.exoplayer2.util.Util
 import fi.finwe.log.Logger
 import fi.finwe.orion360.sdk.pro.OrionContext
@@ -33,6 +45,7 @@ import fi.finwe.orion360.sdk.pro.texture.OrionVideoTexture
 import fi.finwe.orion360.sdk.pro.view.OrionView
 import fi.finwe.orion360.sdk.pro.view.OrionViewContainer
 import fi.finwe.orion360.sdk.pro.viewport.OrionDisplayViewport
+
 
 private const val TAG = "ContentFragment"
 
@@ -256,6 +269,16 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
 
         mVideoPlayer?.setAdViewProvider(mViewContainerIma) // IMPORTANT
 
+
+
+        val uri = Uri.parse(video)
+        val mediaSource = buildMediaSource(uri)
+        mVideoPlayer?.exoPlayer?.playWhenReady = true
+
+        mVideoPlayer?.exoPlayer?.setMediaSource(mediaSource, false)
+        mVideoPlayer?.exoPlayer?.prepare()
+
+
         // Create a new video (or image) texture from a video (or image) source URI.
         mPanoramaTexture = OrionMediaHelper()
             .initializeOrionTexture(
@@ -345,6 +368,18 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
                     putString(ARG_TITLE, title)
                 }
             }
+    }
+
+    private fun buildMediaSource(uri: Uri): MediaSource {
+        val userAgent = context?.let { Util.getUserAgent(it, "360Vuz") }
+        val defaultHttpDataSourceFactory = DefaultHttpDataSource.Factory().setUserAgent(userAgent)
+        val dataSourceFactory: DataSource.Factory =
+            DefaultDataSource.Factory(requireContext(), defaultHttpDataSourceFactory)
+        val mediaItem: MediaItem = MediaItem.fromUri(uri)
+
+        val hlsMediaSource = HlsMediaSource.Factory(dataSourceFactory)
+            .setLoadErrorHandlingPolicy(setErrorHandlingPolicy())
+        return hlsMediaSource.createMediaSource(mediaItem)
     }
 
     override fun onStart() {

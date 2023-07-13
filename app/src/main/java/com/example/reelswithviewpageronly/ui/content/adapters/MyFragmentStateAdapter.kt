@@ -13,8 +13,7 @@ class MyFragmentStateAdapter(
 
     override fun createFragment(position: Int): Fragment {
         return ContentFragment.newInstance(
-//            video = reels[position].url,
-            video = "https://s3.amazonaws.com/orion360-us/Orion360_test_video_2d_equi_360x180deg_1920x960pix_30fps_30sec_x264.mp4",
+            video = reels[position].url,
             title = reels[position].title
         )
     }

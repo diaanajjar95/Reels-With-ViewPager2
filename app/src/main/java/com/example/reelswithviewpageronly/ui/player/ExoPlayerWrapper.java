@@ -31,6 +31,7 @@ package com.example.reelswithviewpageronly.ui.player;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -194,29 +195,21 @@ public class ExoPlayerWrapper extends VideoPlayerWrapper implements Player.Liste
     }
 
     private Cache downloadCache = null;
-    private String DOWNLOAD_CONTENT_DIRECTORY = "downloads";
 
     synchronized Cache getDownloadCache() {
-        if (downloadCache == null) {
-            File downloadContentDirectory = new File(
-                    mContext.getExternalFilesDir(null),
-                    DOWNLOAD_CONTENT_DIRECTORY
-            );
-            downloadCache =
-                    new SimpleCache(downloadContentDirectory, new NoOpCacheEvictor(), new StandaloneDatabaseProvider(mContext));
-        }
+        downloadCache = VideoCache.getInstance(mContext);
         return downloadCache;
     }
 
     // TODO: There seems to be nowhere to input the DefaultBandwidthMeter. Find out what happened to it.
-	private DataSource.Factory buildDataSourceFactory(boolean useBandwidthMeter) {
+    private DataSource.Factory buildDataSourceFactory(boolean useBandwidthMeter) {
 //		DefaultBandwidthMeter meter = useBandwidthMeter ? BANDWIDTH_METER : null;
 
-		String userAgent = Util.getUserAgent(mContext, USER_AGENT);
-		DefaultHttpDataSource.Factory defaultHttpDataSourceFactory = new DefaultHttpDataSource.Factory()
-				.setUserAgent(userAgent);
-		return new DefaultDataSource.Factory(mContext, defaultHttpDataSourceFactory);
-	}
+        String userAgent = Util.getUserAgent(mContext, USER_AGENT);
+        DefaultHttpDataSource.Factory defaultHttpDataSourceFactory = new DefaultHttpDataSource.Factory()
+                .setUserAgent(userAgent);
+        return new DefaultDataSource.Factory(mContext, defaultHttpDataSourceFactory);
+    }
 
     private DataSource.Factory buildDataSourceFactory() {
         String userAgent = Util.getUserAgent(mContext, USER_AGENT);
@@ -733,6 +726,7 @@ public class ExoPlayerWrapper extends VideoPlayerWrapper implements Player.Liste
 
         mCurrentStatus.playerState = PlayerState.END;
         if (mExoPlayer != null) {
+            Log.d(TAG, "doRelease: ");
             mExoPlayer.release();
             mExoPlayer = null;
         } else {
@@ -750,7 +744,23 @@ public class ExoPlayerWrapper extends VideoPlayerWrapper implements Player.Liste
 
     public void destroyCache() {
         if (downloadCache != null) {
-            downloadCache.release();
+//            downloadCache.release(); ---->
+            /**
+             * the above line of code was causing the below crash :
+             *
+             * Unexpected exception loading stream
+             * java.lang.IllegalStateException
+             * at com.google.android.exoplayer2.util.Assertions.checkState(Assertions.java:84)
+             *
+             * the solution :
+             *
+             * Probably, you're releasing your singleton instance of SimpleCache (using SimpleCache.release() method) at some point and then try to reuse it. That's why it's throwing that exception.
+             * As you use a singleton, I think you can just remove the call to release(). Otherwise you need to recreate another SimpleCache instance after release() call.
+             *
+             * GitHub solution link : https://github.com/google/ExoPlayer/issues/4490
+             *
+             * */
+            Log.d(TAG, "destroyCache: release called");
         }
     }
 
