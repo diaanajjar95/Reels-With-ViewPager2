@@ -12,8 +12,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.reelswithviewpageronly.R
 import com.example.reelswithviewpageronly.ui.content.adapters.MyFragmentStateAdapter
 import com.example.reelswithviewpageronly.ui.models.ReelsFactory
+import com.example.reelswithviewpageronly.ui.player.VideoCache
 import java.io.File
-
 
 private const val TAG = "MainActivity"
 
@@ -81,10 +81,33 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     private fun createCardAdapter(): MyFragmentStateAdapter {
         val reels = ReelsFactory.getReels()
         reels.addAll(ReelsFactory.getReels())
         return MyFragmentStateAdapter(this, reels)
     }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause: ")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop: ")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: ")
+        VideoCache.getInstance(this).release()
+    }
+
+    @SuppressLint("WrongThread")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        VideoCache.getInstance(this).release()
+        Log.d(TAG, "onBackPressed: ")
+    }
+
 }

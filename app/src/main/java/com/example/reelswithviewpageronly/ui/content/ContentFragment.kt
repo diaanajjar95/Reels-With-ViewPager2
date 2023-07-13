@@ -480,7 +480,7 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
             mPanoramaTexture = null
         }
         if (null != mVideoPlayer) {
-            mVideoPlayer?.destroyCache()
+//            mVideoPlayer?.destroyCache()
             mVideoPlayer?.release()
             mVideoPlayer = null
         }
@@ -513,4 +513,5 @@ open class ContentFragment : Fragment(), AdEvent.AdEventListener {
             mView = null
         }
     }
+
 }

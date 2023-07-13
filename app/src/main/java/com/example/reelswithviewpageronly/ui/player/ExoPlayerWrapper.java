@@ -744,7 +744,7 @@ public class ExoPlayerWrapper extends VideoPlayerWrapper implements Player.Liste
 
     public void destroyCache() {
         if (downloadCache != null) {
-//            downloadCache.release(); ---->
+//            downloadCache.release();
             /**
              * the above line of code was causing the below crash :
              *
